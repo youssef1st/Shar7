@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>شرح | Shar7</title>
+<style>
+:root {
+  --blue: #2196f3;
+  --blue-hover: #1976d2;
+  --red: #e53935;
+  --green: #22c55e;
+  --bg: #f4f6fa;
+  --card: #ffffff;
+  --text: #161616;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --shadow: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] {
+  --bg: #0e0f12;
+  --card: #16181d;
+  --text: #f2f2f2;
+  --muted: #9aa0aa;
+  --border: #26292f;
+  --shadow: rgba(0, 0, 0, 0.3);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: 'Tahoma', 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ---------- Splash Screen ---------- */
+#splash {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+#splash.hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+#splash img {
+  width: 110px;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+.dots { display: flex; gap: 6px; margin-top: 22px; }
+.dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--blue);
+  animation: blink 1s infinite ease-in-out;
+}
+.dots span:nth-child(2) { animation-delay: 0.15s; }
+.dots span:nth-child(3) { animation-delay: 0.30s; }
+@keyframes blink {
+  0%, 80%, 100% { opacity: 0.2; }
+  40% { opacity: 1; }
+}
+
+/* ---------- Layout & Header ---------- */
+#app { display: none; min-height: 100vh; flex-direction: column; }
+header.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+header.top img { height: 32px; cursor: pointer; }
+.header-right { display: flex; align-items: center; gap: 10px; }
+.iconbtn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+.iconbtn:hover { background: var(--border); }
+.pill {
+  background: var(--blue);
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+.progress-outer { height: 4px; background: var(--border); width: 100%; }
+.progress-inner { height: 100%; background: var(--blue); width: 0%; transition: width 0.4s ease; }
+
+/* ---------- Home View ---------- */
+#home {
+  max-width: 760px;
+  margin: 60px auto;
+  padding: 0 16px;
+  text-align: center;
+}
+#home img { width: 100px; margin-bottom: 16px; }
+#home h1 { font-size: 28px; margin-bottom: 8px; font-weight: 800; }
+#home p { color: var(--muted); margin-bottom: 36px; font-size: 15px; }
+.subject-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+.subject-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 32px 20px;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+.subject-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(33, 150, 243, 0.15);
+  border-color: var(--blue);
+}
+.subject-card .emoji { font-size: 46px; margin-bottom: 12px; }
+.subject-card h3 { margin: 8px 0 4px; font-size: 18px; }
+.subject-card span { color: var(--muted); font-size: 13px; }
+
+/* ---------- Course View ---------- */
+#course {
+  display: none;
+  grid-template-columns: 1fr 340px;
+  gap: 0;
+  max-width: 1350px;
+  margin: 0 auto;
+  width: 100%;
+}
+@media(max-width: 880px) {
+  #course { grid-template-columns: 1fr; }
+  aside.side { display: none; }
+  aside.side.mobile-open { display: block; position: fixed; inset: 0; z-index: 200; overflow-y: auto; }
+}
+
+main.content { padding: 24px; }
+.back {
+  background: none;
+  border: none;
+  color: var(--blue);
+  cursor: pointer;
+  font-weight: 700;
+  margin-bottom: 16px;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+}
+.back:hover { text-decoration: underline; }
+
+.video-box {
+  background: #000;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 16/9;
+  box-shadow: 0 8px 24px var(--shadow);
+}
+.video-box iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+.video-title { font-size: 19px; font-weight: 800; margin-top: 16px; }
+
+.nav-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.navbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  transition: 0.2s;
+}
+.navbtn:hover { background: var(--bg); border-color: var(--blue); }
+.completedbtn {
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  padding: 10px 24px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+.completedbtn:hover { background: var(--blue-hover); }
+.completedbtn.done { background: var(--green); }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+.card h4 { margin: 0 0 12px; font-size: 16px; color: var(--blue); display: flex; align-items: center; gap: 8px; }
+
+/* ---------- Activity / Quiz Card ---------- */
+.activity { border-inline-start: 4px solid var(--red); }
+.activity h4 { color: var(--red); }
+.q-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px dashed var(--border);
+  font-size: 14px;
+  gap: 12px;
+}
+.q-row:last-of-type { border-bottom: none; }
+.q-opts label { margin-inline-start: 12px; cursor: pointer; font-weight: 600; }
+.checkbtn {
+  margin-top: 14px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.checkbtn:hover { background: var(--blue-hover); }
+.result { font-size: 14px; margin-top: 12px; font-weight: 700; }
+
+/* ---------- Sidebar ---------- */
+aside.side {
+  border-inline-start: 1px solid var(--border);
+  padding: 20px;
+  background: var(--card);
+  min-height: calc(100vh - 60px);
+}
+.course-title { font-weight: 800; margin-bottom: 18px; font-size: 16px; color: var(--text); }
+.unit { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; background: var(--bg); }
+.unit-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  user-select: none;
+  background: var(--card);
+}
+.unit-lessons { display: none; }
+.unit.open .unit-lessons { display: block; }
+.unit.open .chev { transform: rotate(45deg); }
+.chev { transition: transform 0.2s; color: var(--blue); font-weight: 900; font-size: 16px; }
+
+.lesson-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  border-top: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.lesson-item:hover { background: var(--card); }
+.lesson-item.active { color: var(--blue); font-weight: 700; background: rgba(33, 150, 243, 0.08); }
+.lesson-item .num { color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+
+<!-- Splash Screen -->
+<div id="splash">
+  <img src="https://shar7-eg.com/wp-content/uploads/2022/02/1x-1.png" alt="شرح">
+  <div class="dots"><span></span><span></span><span></span></div>
+</div>
+
+<!-- Main App -->
+<div id="app">
+  <header class="top">
+    <div class="header-right">
+      <button class="iconbtn" onclick="toggleTheme()" title="تبديل الوضع">🌓</button>
+      <button class="iconbtn" onclick="toggleMobileSide()" title="القائمة الجانبية" style="display:none;" id="mobileMenuBtn">☰</button>
+      <span id="progLabel" style="font-size:13px;color:var(--muted);"></span>
+    </div>
+    <div class="pill" id="progPill">COMPLETE 0%</div>
+    <img src="https://shar7-eg.com/wp-content/uploads/2022/02/1x-1.png" alt="شرح" onclick="goHome()">
+  </header>
+  <div class="progress-outer"><div class="progress-inner" id="progBar"></div></div>
+
+  <!-- Home View -->
+  <div id="home">
+    <img src="https://shar7-eg.com/wp-content/uploads/2022/02/1x-1.png" alt="شرح">
+    <h1>اختار المادة</h1>
+    <p>ابدأ درسك دلوقتي وتابع إنجازك خطوة بخطوة</p>
+    <div class="subject-grid">
+      <div class="subject-card" onclick="openCourse('science')">
+        <div class="emoji">🧪</div>
+        <h3>Science</h3>
+        <span>الصف الأول الإعدادي - الترم الأول</span>
+      </div>
+      <div class="subject-card" onclick="openCourse('math')">
+        <div class="emoji">📐</div>
+        <h3>Math</h3>
+        <span>الصف الأول الإعدادي - مستر طلعت الغيطي</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Course View -->
+  <div id="course">
+    <main class="content">
+      <button class="back" onclick="goHome()">← رجوع للمواد</button>
+      
+      <div class="video-box">
+        <iframe id="vFrame" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+      </div>
+      
+      <div class="video-title" id="vTitle"></div>
+      
+      <div class="nav-row">
+        <button class="navbtn" onclick="stepLesson(-1)">‹ الدرس السابق</button>
+        <button class="completedbtn" id="doneBtn" onclick="toggleDone()">تم الإكمال ✓</button>
+        <button class="navbtn" onclick="stepLesson(1)">الدرس التالي ›</button>
+      </div>
+
+      <!-- Summary Card -->
+      <div class="card">
+        <h4>📝 ملخص الدرس</h4>
+        <p id="summaryText" style="font-size:14px;line-height:1.8;color:var(--muted);margin:0;"></p>
+      </div>
+
+      <!-- Quiz Card -->
+      <div class="card activity">
+        <h4>نشاط تفاعلي</h4>
+        <p style="font-size:13px;color:var(--muted);margin-top:-6px;">ضع علامة (✓) أو (✗):</p>
+        <div class="q-row">
+          <span>1. هل قمت بفهم أفكار هذا الجزء من الشرح جلياً؟</span>
+          <span class="q-opts">
+            <label><input type="radio" name="q1" value="true"> ✓</label>
+            <label><input type="radio" name="q1" value="false"> ✗</label>
+          </span>
+        </div>
+        <div class="q-row">
+          <span>2. هل تدربت على حل المسائل/التطبيقات الخاصة بالدرس؟</span>
+          <span class="q-opts">
+            <label><input type="radio" name="q2" value="true"> ✓</label>
+            <label><input type="radio" name="q2" value="false"> ✗</label>
+          </span>
+        </div>
+        <button class="checkbtn" onclick="checkAnswers()">تحقق من إجابتك</button>
+        <div class="result" id="result"></div>
+      </div>
+    </main>
+
+    <!-- Sidebar -->
+    <aside class="side" id="sidebar">
+      <div class="course-title" id="sideCourseTitle">الصف الأول الإعدادي</div>
+      <div id="unitsWrap"></div>
+    </aside>
+  </div>
+</div>
+
+<script>
+// --- Data Structures ---
+const unitsScience = [
+ { name: 'Unit 1: Matter and its Structure', lessons: [
+   ['Lesson 1 - Matter & Characteristics (Part 1)', 'sVvVHSRFWnw'],
+   ['Lesson 1 - Matter & Characteristics (Part 2)', 'Ki6_VGTvptM'],
+   ['Lesson 1 - Matter & Characteristics (Part 3)', 'ux6iDKigrZg'],
+   ['Lesson 1 - Matter & Characteristics (Part 4)', '8M1AwBjTwXA'],
+   ['Lesson 2 - Matter Construction (Part 1)', 'zbKXGUlWb2I'],
+   ['Lesson 2 - Matter Construction (Part 2)', 'dBNHopiD7eg'],
+   ['Lesson 2 - Matter Construction (Part 3)', '_RK6oxxM6uU'],
+   ['Lesson 3 - Atomic Structure (Part 1)', 'hqnYs_c5k6o'],
+   ['Lesson 3 - Atomic Structure (Part 2)', 'O583HnvsWDo'],
+   ['Lesson 3 - Atomic Structure (Part 3)', 'Bl8Kqamds6s'],
+   ['Lesson 3 - Atomic Structure (Part 4)', 'spkqYlqqJJc']
+ ]},
+ { name: 'Unit 2: Energy', lessons: [
+   ['Lesson 1 - Energy Resources & Forms (Part 1)', 'fNDQnrafJGw'],
+   ['Lesson 1 - Energy Resources & Forms (Part 2)', 'yoVWz7n6ruE'],
+   ['Lesson 1 - Energy Resources & Forms (Part 3)', 'MrFg_a68PeI'],
+   ['Mid-Term Revision (Unit 1 + Unit 2 L1)', 'KV6HTVSseAY'],
+   ['Lesson 2 - Energy Transformation (Part 1)', 'yviy3rduXrA'],
+   ['Lesson 2 - Energy Transformation (Part 2)', 'XiF-dli5acc'],
+   ['Lesson 3 - Heat Energy (Part 1)', 'enwgF_eV3xw'],
+   ['Lesson 3 - Heat Energy (Part 2)', 'CtWv3XaruDw']
+ ]},
+ { name: 'Unit 3: Living Organisms', lessons: [
+   ['Lesson 1 - Diversity & Classification (Part 1)', 'HOGn5bbmzfs'],
+   ['Lesson 1 - Diversity & Classification (Part 2)', 'svne7yQr3sg'],
+   ['Lesson 1 - Diversity & Classification (Part 3)', 'jMf5IoudZ00'],
+   ['Lesson 2 - Adaptation and Diversity', 'qhIuuByf8SU']
+ ]},
+ { name: 'Final Revisions & Exams', lessons: [
+   ['مراجعة ليلة الامتحان (اختيار من متعدد)', 'qlR3tEAsyJQ'],
+   ['إجابة نماذج الوزارة الرسمية', '3yeB4RK85b4']
+ ]}
+];
+
+const unitsMath = [
+ { name: 'Unit 1: Numbers & Ratio', lessons: [
+   ['Lesson 1 - Proportion', 'di14sdi-KWk'],
+   ['Lesson 1 - Proportion (Summary)', 'YPx6QAaC2_g'],
+   ['Lesson 2 - Scale Drawings', 'r1uXL-jmMhk'],
+   ['Lesson 2 - Scale Drawings (Summary)', 'SO8sDbMCfH8'],
+   ['Lesson 3 - Proportional Division', '1iTmsqm6nqg'],
+   ['Lesson 4 - Applications of Percentage', '1Zyezt4-y8w'],
+   ['Applications of Ratio & Proportion', 'kXJMNKhEkZQ'],
+   ['Lesson 5 - Sets & Operations (Part 1)', 'R-eJQ0Wwby4'],
+   ['Lesson 5 - Sets & Operations (Part 2)', 'LwtoTdIsydU'],
+   ['Lesson 6 - Operations on Integers (Part 1)', '3doJ8zjpF2A'],
+   ['Lesson 6 - Operations on Integers (Part 2)', 'WrpQk4AOgO8'],
+   ['Lesson 7 - Operations on Rational Numbers (Part 1)', 'YjareSNvTZY'],
+   ['Lesson 7 - Operations on Rational Numbers (Part 2)', 'Ljr2wKvQR5c']
+ ]},
+ { name: 'Unit 2: Algebra & Equations', lessons: [
+   ['Lesson 1 - Mathematical Expressions', '_i2UlLbBV8g'],
+   ['Lesson 3 - Linear Equations (Part 1)', '7amIPqbtNSw'],
+   ['Lesson 3 - Linear Equations (Part 2)', '8jXRWZFcfuc']
+ ]},
+ { name: 'Unit 3: Geometry & Measurement', lessons: [
+   ['Lesson 1 - Types of Angles & Relationships (Part 1)', 'lpfVLFcXL8A'],
+   ['Lesson 1 - Types of Angles & Relationships (Part 2)', '0LVg4-lboPM'],
+   ['Lesson 2 - Angles Relationships (Continued)', 'H9wFoK0H_UY'],
+   ['Lesson 3 - Parallelism', 'tgKEbNkMT5w'],
+   ['How to Solve Proof (إزاي تحل البرهان)', 'PeK7hSRHYGI'],
+   ['Lesson 4 - The Triangle', 'p0WvIVZFrPo'],
+   ['Lesson 5 - Quadrilaterals (Part 1)', '2Gwse98kGwI'],
+   ['Lesson 5 - Quadrilaterals (Part 2)', 'pBuoMnZu6F4'],
+   ['Lesson 6 - Special Cases of Parallelograms (Part 1)', 'UyeI2yWOUt8'],
+   ['Lesson 6 - Special Cases of Parallelograms (Part 2)', 'm3nRrDVrwzc'],
+   ['Polygons', '3b3zYeV9RCg'],
+   ['Coordinates', 'IDG2aUKmumY']
+ ]},
+ { name: 'Unit 4: Statistics', lessons: [
+   ['Lesson 1 - Organizing Data', 'kEyqNJCf4tU'],
+   ['Lesson 2 - Arithmetic Mean', '9UbauWYOCHE'],
+   ['Lesson 3 - Pie Charts (طريقة الرسم)', 'bQs5hlaAih0'],
+   ['Pie Charts - Revision', 'KW5Ek5rWTzI']
+ ]},
+ { name: 'Revisions & Exams (مراجعات وامتحانات)', lessons: [
+   ['October Revision (مراجعة شهر أكتوبر)', 'O41By3kRRrU'],
+   ['November Revision (مراجعة شهر نوفمبر)', 'BAu9P3vqZQ8'],
+   ['Unit 1 Revision - El-Moasser', 'lG_Dqr4yoSY'],
+   ['Unit 2 Revision - El-Moasser', 'SJrPq9LdbYY'],
+   ['Unit 4 Revision - El-Moasser (Part 1)', 'BYOwQjFBP7U'],
+   ['Unit 4 Revision - El-Moasser (Part 2)', '9b3wMVtNsP0'],
+   ['Geometry Final Revision (مراجعة البرهان)', 'j2W_0O3TJ8U'],
+   ['School Book Model 1 (حل نموذج كتاب المدرسة)', 'nIH1Y8D3Yig'],
+   ['Final Revision - Night Exam (مراجعة ليلة الامتحان)', '6ZfdQs37nIY']
+ ]}
+];
+
+let currentSubject = 'science';
+let activeUnits = unitsScience;
+let flatLessons = [];
+let currentIdx = 0;
+let completedSet = new Set();
+
+// --- App Initialization ---
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+
+  setTimeout(() => {
+    document.getElementById('splash').classList.add('hide');
+    document.getElementById('app').style.display = 'flex';
+  }, 1600);
+});
+
+function checkMobile() {
+  const btn = document.getElementById('mobileMenuBtn');
+  if (window.innerWidth <= 880) {
+    btn.style.display = 'inline-flex';
+  } else {
+    btn.style.display = 'none';
+    document.getElementById('sidebar').classList.remove('mobile-open');
+  }
+}
+
+function toggleTheme() {
+  const d = document.documentElement;
+  const newTheme = d.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  d.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+}
+
+function toggleMobileSide() {
+  document.getElementById('sidebar').classList.toggle('mobile-open');
+}
+
+// --- Navigation & Core Functions ---
+function openCourse(subject) {
+  currentSubject = subject;
+  activeUnits = (subject === 'math') ? unitsMath : unitsScience;
+
+  flatLessons = [];
+  activeUnits.forEach(u => u.lessons.forEach(l => flatLessons.push(l)));
+
+  document.getElementById('sideCourseTitle').textContent = 
+    'الصف الأول الإعدادي | ' + (subject === 'math' ? 'Math' : 'Science');
+
+  const savedDone = JSON.parse(localStorage.getItem('completed_' + subject) || '[]');
+  completedSet = new Set(savedDone);
+
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('course').style.display = 'grid';
+
+  renderSidebar();
+  loadLesson(0);
+}
+
+function renderSidebar() {
+  const wrap = document.getElementById('unitsWrap');
+  wrap.innerHTML = '';
+
+  activeUnits.forEach((u, ui) => {
+    const div = document.createElement('div');
+    div.className = 'unit' + (ui === 0 ? ' open' : '');
+
+    const head = document.createElement('div');
+    head.className = 'unit-head';
+    head.innerHTML = `<span>${u.name}</span><span class="chev">+</span>`;
+    head.onclick = () => div.classList.toggle('open');
+    div.appendChild(head);
+
+    const lw = document.createElement('div');
+    lw.className = 'unit-lessons';
+
+    u.lessons.forEach(l => {
+      const idx = flatLessons.indexOf(l);
+      const it = document.createElement('div');
+      it.className = 'lesson-item';
+      it.dataset.idx = idx;
+      it.innerHTML = `<span>${l[0]}</span><span class="num">${idx + 1}</span>`;
+      it.onclick = () => {
+        loadLesson(idx);
+        document.getElementById('sidebar').classList.remove('mobile-open');
+      };
+      lw.appendChild(it);
+    });
+
+    div.appendChild(lw);
+    wrap.appendChild(div);
+  });
+}
+
+function loadLesson(idx) {
+  currentIdx = idx;
+  const [title, yid] = flatLessons[idx];
+
+  document.getElementById('vTitle').textContent = title;
+  document.getElementById('vFrame').src = 'https://www.youtube.com/embed/' + yid + '?rel=0';
+  document.getElementById('summaryText').textContent =
+    'ملخص سريع لهذا الجزء من "' + title + '": الدرس يشرح المفاهيم والنقاط الرئيسية مع أفكار توضيحية وأمثلة محلولة لسهولة الاستيعاب والتطبيق.';
+
+  document.querySelectorAll('.lesson-item').forEach(x => {
+    x.classList.toggle('active', +x.dataset.idx === idx);
+  });
+
+  const isDone = completedSet.has(idx);
+  const db = document.getElementById('doneBtn');
+  db.textContent = isDone ? 'تم ✓' : 'تم الإكمال ✓';
+  db.classList.toggle('done', isDone);
+
+  updateProgress();
+
+  document.getElementById('result').textContent = '';
+  document.querySelectorAll('.q-opts input').forEach(i => i.checked = false);
+}
+
+function toggleDone() {
+  if (completedSet.has(currentIdx)) {
+    completedSet.delete(currentIdx);
+  } else {
+    completedSet.add(currentIdx);
+  }
+  localStorage.setItem('completed_' + currentSubject, JSON.stringify([...completedSet]));
+  loadLesson(currentIdx);
+}
+
+function updateProgress() {
+  const pct = Math.round((completedSet.size / flatLessons.length) * 100) || 0;
+  document.getElementById('progBar').style.width = pct + '%';
+  document.getElementById('progPill').textContent = 'COMPLETE ' + pct + '%';
+  document.getElementById('progLabel').textContent = `متبقي ${flatLessons.length - completedSet.size} من أصل ${flatLessons.length}`;
+}
+
+function stepLesson(dir) {
+  let n = currentIdx + dir;
+  if (n >= 0 && n < flatLessons.length) {
+    loadLesson(n);
+  }
+}
+
+function checkAnswers() {
+  const q1 = document.querySelector('input[name="q1"]:checked');
+  const q2 = document.querySelector('input[name="q2"]:checked');
+
+  if (!q1 || !q2) {
+    const res = document.getElementById('result');
+    res.textContent = 'من فضلك جاوب على السؤالين الأول!';
+    res.style.color = '#e53935';
+    return;
+  }
+
+  const res = document.getElementById('result');
+  if (q1.value === 'true' && q2.value === 'true') {
+    res.textContent = '✓ أحسنت! استمر في الإنجاز.';
+    res.style.color = 'var(--green)';
+  } else {
+    res.textContent = '✗ راجع النقاط الصعبة في الفيديو وحاول مرة أخرى!';
+    res.style.color = 'var(--red)';
+  }
+}
+
+function goHome() {
+  document.getElementById('course').style.display = 'none';
+  document.getElementById('home').style.display = 'block';
+  document.getElementById('vFrame').src = '';
+}
+</script>
+</body>
+</html>
