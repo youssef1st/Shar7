@@ -8,7 +8,7 @@
   "theme_color": "#2196f3",
   "icons": [
     {
-      "src": "https://via.placeholder.com/512/2196f3/ffffff.png?text=Shar7",
+      "src": "https://raw.githubusercontent.com/youssef1st/Shar7/main/1x-1.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
@@ -16,13 +16,13 @@
   ],
   "screenshots": [
     {
-      "src": "https://via.placeholder.com/1280x720/2196f3/ffffff.png?text=Shar7+Desktop",
+      "src": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1280&h=720&fit=crop",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide"
     },
     {
-      "src": "https://via.placeholder.com/750x1334/2196f3/ffffff.png?text=Shar7+Mobile",
+      "src": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=750&h=1334&fit=crop",
       "sizes": "750x1334",
       "type": "image/png",
       "form_factor": "narrow"
