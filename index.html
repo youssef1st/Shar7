@@ -5,8 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>شرح | Shar7</title>
 
-<!-- إضافة أيقونة الموقع Favicon -->
+<!-- أيقونة الموقع (Favicon) -->
 <link rel="icon" href="https://shar7-eg.com/wp-content/uploads/2022/02/1x-1.png" type="image/png">
+
+<!-- الـ Manifest مدمج مباشرة لدعم التثبيت كـ PWA -->
+<link rel="manifest" href='data:application/manifest+json,{"name":"شرح | Shar7","short_name":"Shar7","start_url":"./","display":"standalone","background_color":"#ffffff","theme_color":"#2196f3","icons":[{"src":"https://shar7-eg.com/wp-content/uploads/2022/02/1x-1.png","sizes":"192x192","type":"image/png"},{"src":"https://shar7-eg.com/wp-content/uploads/2022/02/1x-1.png","sizes":"512x512","type":"image/png"}]}'>
 
 <style>
 :root {
@@ -666,6 +669,13 @@ function goHome() {
   document.getElementById('course').style.display = 'none';
   document.getElementById('home').style.display = 'block';
   document.getElementById('vFrame').src = '';
+}
+
+// --- تسجيل الـ Service Worker لتفعيل إيقونة التثبيت (PWA) ---
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js')
+    .then(() => console.log('PWA Service Worker Ready'))
+    .catch(err => console.log('SW Error:', err));
 }
 </script>
 </body>
