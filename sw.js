@@ -1,17 +1,7 @@
-const CACHE_NAME = 'shar8-v2';
-const assets = [
-  './',
-  './index.html',
-  './data.json',
-  './manifest.json'
-];
+const CACHE_NAME = 'shar8-v3';
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(assets);
-    })
-  );
+  self.skipWaiting();
 });
 
 self.addEventListener('activate', (e) => {
@@ -24,6 +14,8 @@ self.addEventListener('activate', (e) => {
           }
         })
       );
+    }).then(() => {
+      return self.clients.claim();
     })
   );
 });
